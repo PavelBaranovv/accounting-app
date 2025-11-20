@@ -1,4 +1,3 @@
-/* styles.css - Clean Light Blue Theme */
 :root {
     --primary: #3b82f6;
     --primary-hover: #2563eb;
@@ -178,6 +177,25 @@ body {
     min-width: 120px;
 }
 
+.profit-column {
+    white-space: nowrap;
+    min-width: 140px;
+}
+
+.profit-value {
+    font-weight: 600;
+    color: #15803d;
+}
+
+.profit-forecast {
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.profit-negative {
+    color: #dc2626;
+}
+
 /* Forms */
 .form-group {
     margin-bottom: 1.5rem;
@@ -196,7 +214,12 @@ body {
     border: 1px solid var(--border);
     border-radius: 6px;
     font-size: 1rem;
+    font-family: inherit;
     transition: border-color 0.2s;
+}
+
+input[type="date"].form-control {
+    font-family: inherit;
 }
 
 .form-control:focus {

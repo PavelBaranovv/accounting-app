@@ -7,6 +7,7 @@ import org.hibernate.proxy.HibernateProxy;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "projects")
@@ -30,12 +31,15 @@ public class Project {
     @JoinColumn(name = "department_id")
     private Department department;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Column(name = "date_beg")
     private LocalDate dateBeg;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Column(name = "date_end")
     private LocalDate dateEnd;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Column(name = "date_end_real")
     private LocalDate dateEndReal;
 

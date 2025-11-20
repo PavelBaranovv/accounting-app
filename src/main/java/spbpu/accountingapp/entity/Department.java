@@ -26,8 +26,7 @@ public class Department {
     @ManyToMany(mappedBy = "departments")
     private List<Employee> employees = new ArrayList<>();
 
-    @OneToMany()
-    @JoinColumn(name = "project_id")
+    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
     private List<Project> projects = new ArrayList<>();
 
     @Override

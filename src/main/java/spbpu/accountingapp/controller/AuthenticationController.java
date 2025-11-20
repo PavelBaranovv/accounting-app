@@ -33,12 +33,12 @@ public class AuthenticationController {
             model.addAttribute("message", "Регистрация прошла успешно! Теперь вы можете войти в систему.");
         }
 
-        return "login";
+        return "auth/login";
     }
 
     @GetMapping("/register")
     public String register() {
-        return "register";
+        return "auth/register";
     }
 
     @PostMapping("/register")
@@ -64,6 +64,6 @@ public class AuthenticationController {
 
     @GetMapping("/access-denied")
     public String accessDenied() {
-        return "access-denied";
+        return "view/access-denied";
     }
 }

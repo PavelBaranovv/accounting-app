@@ -26,7 +26,13 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/", "/login", "/register", "/css/**").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        // Разрешаем просмотр проектов, отделов и сотрудников всем аутентифицированным
+                        .requestMatchers("/projects", "/departments", "/employees").authenticated()
+                        // Операции с проектами разрешены ADMIN и USER
+                        .requestMatchers("/projects/new", "/projects/*/edit", "/projects/*/delete").hasAnyRole("ADMIN", "USER")
+                        // Операции с сотрудниками и отделами только для ADMIN
+                        .requestMatchers("/employees/new", "/employees/*/edit", "/employees/*/delete").hasRole("ADMIN")
+                        .requestMatchers("/departments/new", "/departments/*/edit", "/departments/*/delete").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -39,6 +45,8 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout=true")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
                         .permitAll()
                 )
                 .exceptionHandling(exceptions -> exceptions

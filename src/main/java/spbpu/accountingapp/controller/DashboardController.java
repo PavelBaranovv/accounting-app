@@ -23,34 +23,4 @@ public class DashboardController {
     public String index() {
         return "redirect:/projects";
     }
-
-    @GetMapping("/projects")
-    public String projects(Model model, Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/login";
-        }
-        model.addAttribute("projects", projectService.getAllProjects());
-        model.addAttribute("pageTitle", "Проекты");
-        return "projects";
-    }
-
-    @GetMapping("/departments")
-    public String departments(Model model, Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/login";
-        }
-        model.addAttribute("departments", departmentService.getAllDepartments());
-        model.addAttribute("pageTitle", "Отделы");
-        return "departments";
-    }
-
-    @GetMapping("/employees")
-    public String employees(Model model, Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/login";
-        }
-        model.addAttribute("employees", employeeService.getAllEmployees());
-        model.addAttribute("pageTitle", "Сотрудники");
-        return "employees";
-    }
 }

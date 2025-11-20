@@ -14,10 +14,18 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
 
     public List<Employee> getAllEmployees() {
-        return employeeRepository.findAllByOrderByLastName();
+        return employeeRepository.findAllByOrderByDepartmentNameAscLastNameAsc();
     }
 
     public Employee getEmployeeById(Long id) {
         return employeeRepository.findById(id).orElse(null);
+    }
+
+    public Employee saveEmployee(Employee employee) {
+        return employeeRepository.save(employee);
+    }
+
+    public void deleteEmployee(Long id) {
+        employeeRepository.deleteById(id);
     }
 }
