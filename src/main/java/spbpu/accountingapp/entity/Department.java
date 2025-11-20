@@ -23,7 +23,7 @@ public class Department {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @ManyToMany()
+    @ManyToMany(mappedBy = "departments")
     private List<Employee> employees = new ArrayList<>();
 
     @OneToMany()
