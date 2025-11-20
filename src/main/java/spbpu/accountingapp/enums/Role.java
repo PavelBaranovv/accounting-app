@@ -1,4 +1,6 @@
 package spbpu.accountingapp.enums;
 
-public class Role {
+public enum Role {
+    USER,
+    ADMIN
 }
