@@ -196,6 +196,28 @@ body {
     color: #dc2626;
 }
 
+.totals-panel {
+    margin-top: 1rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--light);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.totals-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.totals-label {
+    font-weight: 500;
+    color: var(--secondary);
+}
+
 /* Forms */
 .form-group {
     margin-bottom: 1.5rem;

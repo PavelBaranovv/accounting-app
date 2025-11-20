@@ -28,7 +28,10 @@ public class ProjectController {
         }
         List<Project> projects = projectService.getAllProjects();
         model.addAttribute("projects", projects);
-        model.addAttribute("profitInfo", projectService.calculateProfitInfo(projects));
+        var profitInfo = projectService.calculateProfitInfo(projects);
+        model.addAttribute("profitInfo", profitInfo);
+        model.addAttribute("completedProfitTotal", projectService.calculateTotalCompletedProfit(profitInfo));
+        model.addAttribute("projectedProfitTotal", projectService.calculateTotalProjectedProfit(profitInfo));
         model.addAttribute("pageTitle", "Проекты");
         model.addAttribute("isAdmin", authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")));

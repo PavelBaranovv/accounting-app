@@ -55,6 +55,26 @@ public class ProjectService {
                 .collect(Collectors.toMap(Project::getId, this::calculateProfit));
     }
 
+    public BigDecimal calculateTotalCompletedProfit(Map<Long, ProjectProfitInfo> profitInfo) {
+        if (profitInfo == null) {
+            return BigDecimal.ZERO;
+        }
+        return profitInfo.values().stream()
+                .filter(info -> info.status() == ProfitStatus.POSITIVE || info.status() == ProfitStatus.NEGATIVE)
+                .map(ProjectProfitInfo::profit)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public BigDecimal calculateTotalProjectedProfit(Map<Long, ProjectProfitInfo> profitInfo) {
+        if (profitInfo == null) {
+            return BigDecimal.ZERO;
+        }
+        return profitInfo.values().stream()
+                .filter(info -> info.status() == ProfitStatus.PROJECTED)
+                .map(ProjectProfitInfo::profit)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
     private ProjectProfitInfo calculateProfit(Project project) {
         BigDecimal salarySum = getDepartmentSalarySum(project.getDepartment());
         BigDecimal durationMonths = calculateDurationInMonths(project);
