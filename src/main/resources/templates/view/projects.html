@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Проекты</title>
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+</head>
+<body>
+<div class="app-container">
+    <header class="header">
+        <div class="header-content">
+            <a th:href="@{/}" class="logo">Бухгалтерия</a>
+            <nav class="nav">
+                <a th:href="@{/projects}" class="nav-link active">Проекты</a>
+                <a th:href="@{/departments}" class="nav-link">Отделы</a>
+                <a th:href="@{/employees}" class="nav-link">Сотрудники</a>
+                <a th:href="@{/reports}" class="nav-link">Отчеты</a>
+                <span class="user-info" th:text="${#authentication.name}"></span>
+                <form th:action="@{/logout}" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-outline btn-sm">Выйти</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Проекты</h1>
+            <a th:if="${isAdmin or isUser}" th:href="@{/projects/new}" class="btn btn-primary">Добавить проект</a>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success">
+            <span th:text="${success}"></span>
+        </div>
+        <div th:if="${error}" class="alert alert-danger">
+            <span th:text="${error}"></span>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th>Стоимость</th>
+                        <th>Отдел</th>
+                        <th>Начало</th>
+                        <th>План окончания</th>
+                        <th>Прибыль</th>
+                        <th>Статус</th>
+                        <th th:if="${isAdmin or isUser}">Действия</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="project : ${projects}">
+                        <td th:text="${project.name}"></td>
+                        <td class="cost-column" th:text="${#numbers.formatDecimal(project.cost, 0, 'COMMA', 2, 'POINT') + ' ₽'}"></td>
+                        <td>
+                            <span th:if="${project.department != null}"
+                                  th:text="${project.department.name}">
+
+                            </span>
+                            <span th:if="${project.department == null}">—</span>
+                        </td>
+                        <td class="date-column" th:text="${project.dateBeg != null ? #temporals.format(project.dateBeg, 'dd.MM.yyyy') : '—'}"></td>
+                        <td class="date-column" th:text="${project.dateEnd != null ? #temporals.format(project.dateEnd, 'dd.MM.yyyy') : '—'}"></td>
+                        <td class="profit-column" th:with="info=${profitInfo[project.id]}">
+                            <span th:if="${info != null}"
+                                  class="profit-value"
+                                  th:classappend="${info.status == T(spbpu.accountingapp.enums.ProfitStatus).NEGATIVE} ? ' profit-negative' : (${info.status == T(spbpu.accountingapp.enums.ProfitStatus).PROJECTED} ? ' profit-forecast' : '')"
+                                  th:text="${#numbers.formatDecimal(info.profit, 0, 'COMMA', 2, 'POINT')} + ' ₽'">
+                            </span>
+                            <span th:if="${info == null}">—</span>
+                        </td>
+                        <td>
+                            <div th:if="${project.dateEndReal != null}" class="status-completed">
+                                <span class="badge badge-success">Завершен</span>
+                                <span th:text="${#temporals.format(project.dateEndReal, 'dd.MM.yyyy')}" class="completed-date"></span>
+                            </div>
+                            <span th:if="${project.dateEndReal == null}" class="badge badge-warning">В работе</span>
+                        </td>
+
+                        <td th:if="${isAdmin or isUser}">
+                            <div class="d-flex gap-2">
+                                <a th:href="@{/projects/{id}/edit(id=${project.id})}" class="btn btn-outline-warning btn-sm">Изменить</a>
+                                <form th:action="@{/projects/{id}/delete(id=${project.id})}" method="post" style="display: inline;">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Удалить проект?')">Удалить</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${projects == null or projects.empty}">
+                        <td th:attr="colspan=${isAdmin or isUser} ? 8 : 7" class="text-center text-muted">Нет проектов для отображения</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="totals-panel" th:if="${projects != null and !projects.empty}">
+                    <div class="totals-item">
+                        <span class="totals-label">Прибыль от завершенных проектов:</span>
+                        <span class="profit-value"
+                              th:classappend="${completedProfitTotal.signum() < 0} ? ' profit-negative' : ''"
+                              th:text="${#numbers.formatDecimal(completedProfitTotal, 0, 'COMMA', 2, 'POINT')} + ' ₽'"></span>
+                    </div>
+                    <div class="totals-item">
+                        <span class="totals-label">Потенциальная прибыль от незавершенных проектов:</span>
+                        <span class="profit-value profit-forecast"
+                              th:text="${#numbers.formatDecimal(projectedProfitTotal, 0, 'COMMA', 2, 'POINT')} + ' ₽'"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

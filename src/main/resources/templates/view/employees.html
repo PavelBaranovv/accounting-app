@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Сотрудники</title>
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+</head>
+<body>
+<div class="app-container">
+    <header class="header">
+        <div class="header-content">
+            <a th:href="@{/}" class="logo">Бухгалтерия</a>
+            <nav class="nav">
+                <a th:href="@{/projects}" class="nav-link">Проекты</a>
+                <a th:href="@{/departments}" class="nav-link">Отделы</a>
+                <a th:href="@{/employees}" class="nav-link active">Сотрудники</a>
+                <a th:href="@{/reports}" class="nav-link">Отчеты</a>
+                <span class="user-info" th:text="${#authentication.name}"></span>
+                <form th:action="@{/logout}" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-outline btn-sm">Выйти</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Сотрудники</h1>
+            <a th:if="${isAdmin}" th:href="@{/employees/new}" class="btn btn-primary">Добавить сотрудника</a>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success">
+            <span th:text="${success}"></span>
+        </div>
+        <div th:if="${error}" class="alert alert-danger">
+            <span th:text="${error}"></span>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>ФИО</th>
+                        <th>Должность</th>
+                        <th>Зарплата</th>
+                        <th>Отделы</th>
+                        <th th:if="${isAdmin}">Действия</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="employee : ${employees}">
+                        <td th:text="${employee.lastName + ' ' + employee.firstName + ' ' + (employee.fatherName ?: '')}"></td>
+                        <td th:text="${employee.position}"></td>
+                        <td class="cost-column" th:text="${#numbers.formatDecimal(employee.salary, 0, 'COMMA', 2, 'POINT') + ' ₽'}"></td>
+                        <td>
+                                <span th:each="dept, iter : ${employee.departments}"
+                                      th:text="${dept.name} + (${iter.last} ? '' : ', ')"></span>
+                            <span th:if="${employee.departments == null or employee.departments.empty}" class="text-muted">—</span>
+                        </td>
+                        <td th:if="${isAdmin}">
+                            <div class="d-flex gap-2">
+                                <a th:href="@{/employees/{id}/edit(id=${employee.id})}" class="btn btn-outline-warning btn-sm">Изменить</a>
+                                <form th:action="@{/employees/{id}/delete(id=${employee.id})}" method="post" style="display: inline;">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Удалить сотрудника?')">Удалить</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${employees == null or employees.empty}">
+                        <td colspan="5" class="text-center text-muted">Нет сотрудников для отображения</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

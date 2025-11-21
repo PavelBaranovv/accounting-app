@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${pageTitle}">Проект</title>
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+</head>
+<body>
+<div class="app-container">
+    <header class="header">
+        <div class="header-content">
+            <a th:href="@{/}" class="logo">Бухгалтерия</a>
+            <nav class="nav">
+                <a th:href="@{/projects}" class="nav-link">Проекты</a>
+                <a th:href="@{/departments}" class="nav-link">Отделы</a>
+                <a th:href="@{/employees}" class="nav-link">Сотрудники</a>
+                <a th:href="@{/reports}" class="nav-link">Отчеты</a>
+                <span class="user-info" th:text="${#authentication.name}"></span>
+                <form th:action="@{/logout}" method="post" style="display: inline;">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <button type="submit" class="btn btn-outline btn-sm">Выйти</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1 class="page-title" th:text="${pageTitle}">Проект</h1>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div th:if="${success}" class="alert alert-success">
+                    <span th:text="${success}"></span>
+                </div>
+                <div th:if="${error}" class="alert alert-danger">
+                    <span th:text="${error}"></span>
+                </div>
+
+                <form th:object="${project}" th:action="${project.id != null} ? @{/projects/{id}(id=${project.id})} : @{/projects}" method="post" id="projectForm">
+                    <div class="form-group">
+                        <label class="form-label">Название проекта</label>
+                        <input type="text" class="form-control" th:field="*{name}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Стоимость (₽)</label>
+                        <input type="number" class="form-control" th:field="*{cost}" step="0.01" min="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Отдел</label>
+                        <select class="form-control" th:field="*{department}">
+                            <option value="">-- Выберите отдел --</option>
+                            <option th:each="dept : ${departments}"
+                                    th:value="${dept.id}"
+                                    th:text="${dept.name}"
+                                    th:selected="${project.department != null and project.department.id == dept.id}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Дата начала</label>
+                        <input type="date" class="form-control" th:field="*{dateBeg}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Плановая дата окончания</label>
+                        <input type="date" class="form-control" th:field="*{dateEnd}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Фактическая дата окончания</label>
+                        <input type="date" class="form-control" th:field="*{dateEndReal}">
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <span th:text="${project.id != null} ? 'Обновить' : 'Создать'"></span> проект
+                        </button>
+                        <a th:href="@{/projects}" class="btn btn-outline">Отмена</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const startInput = document.getElementById('dateBeg');
+        const plannedEndInput = document.getElementById('dateEnd');
+        const actualEndInput = document.getElementById('dateEndReal');
+
+        function applyMinBoundary() {
+            if (startInput && startInput.value) {
+                if (plannedEndInput) plannedEndInput.min = startInput.value;
+                if (actualEndInput) actualEndInput.min = startInput.value;
+            } else {
+                if (plannedEndInput) plannedEndInput.removeAttribute('min');
+                if (actualEndInput) actualEndInput.removeAttribute('min');
+            }
+        }
+
+        if (startInput) {
+            startInput.addEventListener('input', applyMinBoundary);
+            startInput.addEventListener('change', applyMinBoundary);
+        }
+
+        applyMinBoundary();
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Отчеты</title>
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+</head>
+<body>
+<div class="app-container">
+    <header class="header">
+        <div class="header-content">
+            <a th:href="@{/}" class="logo">Бухгалтерия</a>
+            <nav class="nav">
+                <a th:href="@{/projects}" class="nav-link">Проекты</a>
+                <a th:href="@{/departments}" class="nav-link">Отделы</a>
+                <a th:href="@{/employees}" class="nav-link">Сотрудники</a>
+                <a th:href="@{/reports}" class="nav-link active">Отчеты</a>
+                <span class="user-info" th:text="${#authentication.name}"></span>
+                <form th:action="@{/logout}" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-outline btn-sm">Выйти</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">Отчеты</h1>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title" style="margin-bottom: 1.5rem;">Экспорт данных в Excel</h2>
+                
+                <div class="reports-grid">
+                    <div class="report-card">
+                        <h3 class="report-title">Отчет по проектам</h3>
+                        <p class="report-description">Полный отчет по всем проектам, включая информацию о прибыли, датах и статусах.</p>
+                        <a th:href="@{/reports/projects/export}" class="btn btn-primary">
+                            Скачать отчет по проектам
+                        </a>
+                    </div>
+
+                    <div class="report-card">
+                        <h3 class="report-title">Отчет по сотрудникам</h3>
+                        <p class="report-description">Полный отчет по всем сотрудникам, включая информацию о зарплатах и отделах.</p>
+                        <a th:href="@{/reports/employees/export}" class="btn btn-primary">
+                            Скачать отчет по сотрудникам
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>
+
