@@ -35,7 +35,7 @@ public class EmployeeController {
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("employee", new Employee());
-        model.addAttribute("departments", departmentService.getAllDepartments());
+        model.addAttribute("departments", departmentService.getAllDepartmentsWithEmplAndProj());
         model.addAttribute("pageTitle", "Создать сотрудника");
         return "form/employee-form";
     }
@@ -60,7 +60,7 @@ public class EmployeeController {
             return "redirect:/employees";
         }
         model.addAttribute("employee", employee);
-        model.addAttribute("departments", departmentService.getAllDepartments());
+        model.addAttribute("departments", departmentService.getAllDepartmentsWithEmplAndProj());
         model.addAttribute("pageTitle", "Редактировать сотрудника");
         return "form/employee-form";
     }

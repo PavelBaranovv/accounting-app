@@ -10,8 +10,11 @@ import java.util.List;
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
-    @Query("SELECT e FROM Employee e LEFT JOIN e.departments d GROUP BY e.id ORDER BY COALESCE(MIN(d.name), 'zzzzzzzzzz'), e.lastName, e.firstName")
-    List<Employee> findAllByOrderByDepartmentNameAscLastNameAsc();
-
-    List<Employee> findAllByOrderByLastName();
+    @Query("""
+            SELECT DISTINCT e
+            FROM Employee e
+            LEFT JOIN FETCH e.departments d
+            ORDER BY e.lastName, e.firstName, e.id
+            """)
+    List<Employee> getAllWithDepartments();
 }

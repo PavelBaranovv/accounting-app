@@ -14,7 +14,7 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
 
     public List<Employee> getAllEmployees() {
-        return employeeRepository.findAllByOrderByDepartmentNameAscLastNameAsc();
+        return employeeRepository.getAllWithDepartments();
     }
 
     public Employee getEmployeeById(Long id) {

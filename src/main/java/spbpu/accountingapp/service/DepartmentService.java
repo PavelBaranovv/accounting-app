@@ -2,6 +2,7 @@ package spbpu.accountingapp.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import spbpu.accountingapp.entity.Department;
 import spbpu.accountingapp.repository.DepartmentRepository;
 
@@ -13,8 +14,12 @@ public class DepartmentService {
 
     private final DepartmentRepository departmentRepository;
 
-    public List<Department> getAllDepartments() {
-        return departmentRepository.findAllByOrderByName();
+    @Transactional(readOnly = true)
+    public List<Department> getAllDepartmentsWithEmplAndProj() {
+        List<Department> departments = departmentRepository.getAllWithEmployees();
+        return !departments.isEmpty() ?
+                departmentRepository.getAllWithProjects() :
+                departments;
     }
 
     public Department getDepartmentById(Long id) {

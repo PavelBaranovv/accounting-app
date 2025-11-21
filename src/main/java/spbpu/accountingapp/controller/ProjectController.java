@@ -40,22 +40,11 @@ public class ProjectController {
         return "view/projects";
     }
 
-    @GetMapping("/{id}")
-    public String projectDetails(@PathVariable Long id, Model model) {
-        Project project = projectService.getProjectById(id);
-        if (project == null) {
-            return "redirect:/projects";
-        }
-        model.addAttribute("project", project);
-        model.addAttribute("pageTitle", "Проект: " + project.getName());
-        return "project-details";
-    }
-
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("project", new Project());
-        model.addAttribute("departments", departmentService.getAllDepartments());
+        model.addAttribute("departments", departmentService.getAllDepartmentsWithEmplAndProj());
         model.addAttribute("pageTitle", "Создать проект");
         return "form/project-form";
     }
@@ -66,6 +55,8 @@ public class ProjectController {
         try {
             projectService.saveProject(project);
             redirectAttributes.addFlashAttribute("success", "Проект успешно создан");
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Ошибка при создании проекта");
         }
@@ -80,7 +71,7 @@ public class ProjectController {
             return "redirect:/projects";
         }
         model.addAttribute("project", project);
-        model.addAttribute("departments", departmentService.getAllDepartments());
+        model.addAttribute("departments", departmentService.getAllDepartmentsWithEmplAndProj());
         model.addAttribute("pageTitle", "Редактировать проект");
         return "form/project-form";
     }
@@ -92,6 +83,8 @@ public class ProjectController {
             project.setId(id);
             projectService.saveProject(project);
             redirectAttributes.addFlashAttribute("success", "Проект успешно обновлен");
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Ошибка при обновлении проекта");
         }

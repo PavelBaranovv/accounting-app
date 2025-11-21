@@ -22,7 +22,7 @@ public class DepartmentController {
         if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/login";
         }
-        model.addAttribute("departments", departmentService.getAllDepartments());
+        model.addAttribute("departments", departmentService.getAllDepartmentsWithEmplAndProj());
         model.addAttribute("pageTitle", "Отделы");
         model.addAttribute("isAdmin", authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")));

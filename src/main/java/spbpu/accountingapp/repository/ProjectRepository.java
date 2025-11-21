@@ -10,8 +10,11 @@ import java.util.List;
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
-    @Query("SELECT p FROM Project p LEFT JOIN p.department d ORDER BY d.name, p.dateBeg")
-    List<Project> findAllByOrderByDepartmentNameAscDateBegAsc();
-
-    List<Project> findByDepartmentIdOrderByDateBeg(Long departmentId);
+    @Query("""
+            SELECT p
+            FROM Project p
+            LEFT JOIN FETCH p.department d
+            ORDER BY d.name, p.dateBeg
+            """)
+    List<Project> getAllWithDepartment();
 }
