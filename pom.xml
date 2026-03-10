@@ -11,7 +11,7 @@
     <groupId>spbpu</groupId>
     <artifactId>accounting-app</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>accounting-app</name>
     <description>accounting-app</description>
     <url/>
