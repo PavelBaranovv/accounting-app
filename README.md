@@ -25,6 +25,12 @@
 - Maven
 - Docker Compose
 
+## Скриншоты
+<img width="800" alt="image" src="https://github.com/user-attachments/assets/04076c73-6599-47fa-8d9e-ec6acb9a932d" />
+<img width="800" alt="image" src="https://github.com/user-attachments/assets/dab40a08-5afe-43a5-9e9c-12abef81535a" />
+<img width="800" alt="image" src="https://github.com/user-attachments/assets/8eb091db-f69d-4064-86cf-97f2eebcfd16" />
+
+
 ## Быстрый запуск
 ```
 docker compose up --build
